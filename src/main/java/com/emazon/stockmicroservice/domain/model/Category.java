@@ -1,18 +1,37 @@
 package com.emazon.stockmicroservice.domain.model;
 
+import com.emazon.stockmicroservice.domain.exception.EmptyFieldException;
+import com.emazon.stockmicroservice.domain.exception.OversizedFieldException;
+import com.emazon.stockmicroservice.domain.util.DomainConstants;
+
+import static java.util.Objects.requireNonNull;
+
 public class Category {
 
-    public Long id;
-
-    public String name;
-
-    public String description;
+    public final Long id;
+    public final String name;
+    public final String description;
 
 
     public Category(Long id, String name, String description) {
+
+
+        if (name.trim().isEmpty()) {
+            throw new EmptyFieldException(DomainConstants.Field.NAME.toString());
+        }
+        if (description.trim().isEmpty()) {
+            throw new EmptyFieldException(DomainConstants.Field.DESCRIPTION.toString());
+        }
+        if (name.length() > DomainConstants.MAXSIZENAME) {
+            throw new OversizedFieldException(DomainConstants.Field.NAME.toString());
+        }
+        if (description.length() > DomainConstants.MAXSIZEDESCRIPTION) {
+            throw new OversizedFieldException(DomainConstants.Field.DESCRIPTION.toString());
+        }
+
         this.id = id;
-        this.name = name;
-        this.description = description;
+        this.name = name; requireNonNull(name, DomainConstants.FIELD_NAME_NULL_MESSAGE);
+        this.description = description; requireNonNull(description, DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE);
     }
 
 
@@ -20,23 +39,14 @@ public class Category {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
