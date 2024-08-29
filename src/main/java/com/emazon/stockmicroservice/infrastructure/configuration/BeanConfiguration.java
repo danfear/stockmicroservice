@@ -1,7 +1,7 @@
 package com.emazon.stockmicroservice.infrastructure.configuration;
 
-import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
-import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
+import com.emazon.stockmicroservice.domain.api.ISaveCategoryServicePort;
+import com.emazon.stockmicroservice.domain.spi.ISaveCategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.usecase.categoryusecase.SaveCategoryUseCase;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.adapter.CategoryJpaAdapter;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.mapper.ICategoryEntityMapper;
@@ -18,12 +18,12 @@ public class BeanConfiguration {
     private final ICategoryEntityMapper categoryEntityMapper;
 
     @Bean
-    public ICategoryPersistencePort categoryPersistencePort() {
+    public ISaveCategoryPersistencePort categoryPersistencePort() {
         return new CategoryJpaAdapter(categoryRepository, categoryEntityMapper);
     }
 
     @Bean
-    public ICategoryServicePort categoryServicePort() {
+    public ISaveCategoryServicePort categoryServicePort() {
         return new SaveCategoryUseCase(categoryPersistencePort());
     }
 
