@@ -2,7 +2,7 @@ package com.emazon.stockmicroservice.infrastructure.input.rest;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.exception.GlobalExceptionHandler;
-import com.emazon.stockmicroservice.application.handler.categoryhandler.ISaveCategoryHandler;
+import com.emazon.stockmicroservice.application.handler.categoryhandler.ICategoryHandler;
 import com.emazon.stockmicroservice.domain.exception.NameEmptyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ class CategoryRestControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private ISaveCategoryHandler saveCategoryHandler;
+    private ICategoryHandler saveCategoryHandler;
 
     @InjectMocks
     private CategoryRestController categoryRestController;

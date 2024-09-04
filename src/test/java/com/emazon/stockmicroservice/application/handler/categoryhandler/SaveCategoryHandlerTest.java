@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 class SaveCategoryHandlerTest {
 
     @InjectMocks
-    private SaveCategoryHandler saveCategoryHandler;
+    private CategoryHandler saveCategoryHandler;
 
     @Mock
     private ICategoryRequestMapper categoryRequestMapper;

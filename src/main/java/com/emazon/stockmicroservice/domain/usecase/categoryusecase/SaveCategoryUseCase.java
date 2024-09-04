@@ -1,19 +1,21 @@
 package com.emazon.stockmicroservice.domain.usecase.categoryusecase;
 
-import com.emazon.stockmicroservice.domain.api.ISaveCategoryServicePort;
+import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
 import com.emazon.stockmicroservice.domain.exception.DescriptionEmptyException;
 import com.emazon.stockmicroservice.domain.exception.DescriptionOversizedException;
 import com.emazon.stockmicroservice.domain.exception.NameEmptyException;
 import com.emazon.stockmicroservice.domain.exception.NameOversizedException;
 import com.emazon.stockmicroservice.domain.model.Category;
-import com.emazon.stockmicroservice.domain.spi.ISaveCategoryPersistencePort;
+import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.util.DomainConstants;
 
-public class SaveCategoryUseCase implements ISaveCategoryServicePort {
+import java.util.List;
 
-    private final ISaveCategoryPersistencePort categoryPersistencePort;
+public class SaveCategoryUseCase implements ICategoryServicePort {
 
-    public SaveCategoryUseCase(ISaveCategoryPersistencePort categoryPersistencePort) {
+    private final ICategoryPersistencePort categoryPersistencePort;
+
+    public SaveCategoryUseCase(ICategoryPersistencePort categoryPersistencePort) {
         this.categoryPersistencePort = categoryPersistencePort;
     }
 
@@ -33,5 +35,10 @@ public class SaveCategoryUseCase implements ISaveCategoryServicePort {
         }
         
         categoryPersistencePort.saveCategory(category);
+    }
+
+    @Override
+    public List<Category> getAllCategories(){
+        return categoryPersistencePort.getAllCategories();
     }
 }

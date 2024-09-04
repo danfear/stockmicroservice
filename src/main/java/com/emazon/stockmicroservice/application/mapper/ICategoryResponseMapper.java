@@ -19,6 +19,7 @@ public interface ICategoryResponseMapper {
                         .map(category -> {
                                 CategoryResponse categoryResponse = new CategoryResponse();
                                 categoryResponse.setName(category.getName());
+                                categoryResponse.setDescription(category.getDescription());
                                 return categoryResponse;
                         }).toList();
         }
