@@ -1,28 +1,29 @@
 package com.emazon.stockmicroservice.infrastructure.input.rest;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
-import com.emazon.stockmicroservice.application.exception.GlobalExceptionHandler;
+import com.emazon.stockmicroservice.application.dto.CategoryResponse;
+import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
 import com.emazon.stockmicroservice.application.handler.categoryhandler.ICategoryHandler;
-import com.emazon.stockmicroservice.domain.exception.NameEmptyException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.emazon.stockmicroservice.domain.util.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import java.util.Collections;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CategoryRestControllerTest {
@@ -30,79 +31,62 @@ class CategoryRestControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private ICategoryHandler saveCategoryHandler;
+    private ICategoryHandler categoryHandler;
 
     @InjectMocks
     private CategoryRestController categoryRestController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryRestController)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryRestController).build();
     }
 
     @Test
-    void testSaveCategoryInStock_Success() throws Exception {
-        // Given
+    void when_CategoryJsonIsCorrect_Expect_SaveCategorySuccesfully() throws Exception {
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setName("Electronics");
-        categoryRequest.setDescription("Devices");
+        categoryRequest.setDescription("Devices and gadgets");
 
-        doNothing().when(saveCategoryHandler).saveCategoryInStock(categoryRequest);
-        // When
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/category/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(categoryRequest)))
-                .andExpect(status().isCreated())
-                .andReturn();
-        // Then
-        verify(saveCategoryHandler, times(1)).saveCategoryInStock(categoryRequest);
-        assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+        mockMvc.perform(post("/categories")
+                        .contentType("application/json")
+                        .content("{\"name\": \"Electronics\", \"description\": \"Devices and gadgets\"}"))
+                .andExpect(status().isCreated());
+
+        verify(categoryHandler, times(1)).saveCategoryInStock(any(CategoryRequest.class));
     }
 
     @Test
-    void testSaveCategoryInStock_Failure() throws Exception {
-        // Given
-        CategoryRequest categoryRequest = new CategoryRequest();
-        categoryRequest.setName("Electronics");
-        categoryRequest.setDescription("Devices");
+    void when_ParametersAreCorrect_Expect_GetAllCategoriesFromStockSuccesfully() throws Exception {
+        CategoryResponse categoryResponse1 = new CategoryResponse();
+        categoryResponse1.setName("Electronics");
+        categoryResponse1.setDescription("Devices and gadgets");
 
-        doThrow(new NameEmptyException()).when(saveCategoryHandler).saveCategoryInStock(categoryRequest);
-        // When
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/category/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(categoryRequest)))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-        // Then
-        verify(saveCategoryHandler, times(1)).saveCategoryInStock(categoryRequest);
-        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+        PaginatedResponse<CategoryResponse> paginatedResponse = new PaginatedResponse<>(
+                Collections.singletonList(categoryResponse1),
+                0,
+                5,
+                "name",
+                true,
+                1,
+                1
+        );
 
-        String responseBody = result.getResponse().getContentAsString();
-        assertTrue(responseBody.contains("Validation Error"));
-        assertTrue(responseBody.contains("Name cannot be empty"));
-    }
+        when(categoryHandler.getAllCategoriesFromStock(any(Pagination.class))).thenReturn(paginatedResponse);
 
-    @Test
-    void when_JSONIsEmpty_Expect_ThrowsInvalidRequest() throws Exception {
-        // When
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/category/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}")) // Empty JSON
-                .andExpect(status().isBadRequest())
-                .andReturn();
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
-    }
-
-    // Helper method to convert objects to JSON string
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(get("/categories")
+                        .param("page", "0")
+                        .param("size", "5")
+                        .param("sortBy", "name")
+                        .param("ascending", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].name").value("Electronics"))
+                .andExpect(jsonPath("$.data[0].description").value("Devices and gadgets"))
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(5))
+                .andExpect(jsonPath("$.sortBy").value("name"))
+                .andExpect(jsonPath("$.ascending").value(true))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
     }
 }

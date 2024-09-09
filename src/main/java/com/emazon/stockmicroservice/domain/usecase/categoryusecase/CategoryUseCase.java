@@ -8,14 +8,15 @@ import com.emazon.stockmicroservice.domain.exception.NameOversizedException;
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.util.DomainConstants;
+import com.emazon.stockmicroservice.domain.util.Pagination;
 
 import java.util.List;
 
-public class SaveCategoryUseCase implements ICategoryServicePort {
+public class CategoryUseCase implements ICategoryServicePort {
 
     private final ICategoryPersistencePort categoryPersistencePort;
 
-    public SaveCategoryUseCase(ICategoryPersistencePort categoryPersistencePort) {
+    public CategoryUseCase(ICategoryPersistencePort categoryPersistencePort) {
         this.categoryPersistencePort = categoryPersistencePort;
     }
 
@@ -38,7 +39,11 @@ public class SaveCategoryUseCase implements ICategoryServicePort {
     }
 
     @Override
-    public List<Category> getAllCategories(){
-        return categoryPersistencePort.getAllCategories();
+    public List<Category> getAllCategories(Pagination pagination) {
+        return categoryPersistencePort.getAllCategories(pagination);
+    }
+    @Override
+    public long getTotalElements() {
+        return categoryPersistencePort.getTotalElements();
     }
 }

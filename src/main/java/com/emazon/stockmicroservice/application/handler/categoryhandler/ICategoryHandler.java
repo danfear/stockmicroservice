@@ -2,11 +2,11 @@ package com.emazon.stockmicroservice.application.handler.categoryhandler;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
-
-import java.util.List;
+import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.Pagination;
 
 public interface ICategoryHandler {
     void saveCategoryInStock(CategoryRequest categoryRequest);
-    List<CategoryResponse> getAllCategoriesFromStock();
+    PaginatedResponse<CategoryResponse> getAllCategoriesFromStock(Pagination pagination);
 
 }
