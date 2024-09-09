@@ -2,6 +2,7 @@ package com.emazon.stockmicroservice.application.handler.categoryhandler;
 
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
+<<<<<<< HEAD
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
 import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
 import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
@@ -9,12 +10,18 @@ import com.emazon.stockmicroservice.application.mapper.ICategoryResponseMapper;
 import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.util.Pagination;
+=======
+import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
+import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
+import com.emazon.stockmicroservice.domain.model.Category;
+>>>>>>> origin/feature/h2
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+<<<<<<< HEAD
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +38,20 @@ class CategoryHandlerTest {
     private ICategoryServicePort categoryServicePort;
     @Mock
     private ICategoryResponseMapper categoryResponseMapper;
+=======
+import static org.mockito.Mockito.*;
+
+class SaveCategoryHandlerTest {
+
+    @InjectMocks
+    private CategoryHandler saveCategoryHandler;
+
+    @Mock
+    private ICategoryRequestMapper categoryRequestMapper;
+
+    @Mock
+    private ICategoryServicePort categoryServicePort;
+>>>>>>> origin/feature/h2
 
     @BeforeEach
     public void setUp() {
@@ -49,7 +70,11 @@ class CategoryHandlerTest {
         when(categoryRequestMapper.toCategory(categoryRequest)).thenReturn(category);
 
         // When
+<<<<<<< HEAD
         categoryHandler.saveCategoryInStock(categoryRequest);
+=======
+        saveCategoryHandler.saveCategoryInStock(categoryRequest);
+>>>>>>> origin/feature/h2
 
         // Then
         verify(categoryRequestMapper, times(1)).toCategory(categoryRequest);
@@ -70,7 +95,11 @@ class CategoryHandlerTest {
 
         // When & Then
         try {
+<<<<<<< HEAD
             categoryHandler.saveCategoryInStock(categoryRequest);
+=======
+            saveCategoryHandler.saveCategoryInStock(categoryRequest);
+>>>>>>> origin/feature/h2
         } catch (RuntimeException e) {
             // Expected exception
         }
@@ -78,6 +107,7 @@ class CategoryHandlerTest {
         verify(categoryRequestMapper, times(1)).toCategory(categoryRequest);
         verify(categoryServicePort, times(1)).saveCategory(category);
     }
+<<<<<<< HEAD
 
     @Test
     void when_ParametersAreCorret_Expect_GetAllCategoriesFromStockSuccesfully() {
@@ -111,4 +141,6 @@ class CategoryHandlerTest {
         assertEquals(2, result.getTotalElements());
         assertEquals(1, result.getTotalPages());
     }
+=======
+>>>>>>> origin/feature/h2
 }
