@@ -3,7 +3,7 @@ package com.emazon.stockmicroservice.application.handler.categoryhandler;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
-import com.emazon.stockmicroservice.domain.api.ISaveCategoryServicePort;
+import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
 import com.emazon.stockmicroservice.domain.model.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class SaveCategoryHandlerTest {
     private ICategoryRequestMapper categoryRequestMapper;
 
     @Mock
-    private ISaveCategoryServicePort categoryServicePort;
+    private ICategoryServicePort categoryServicePort;
 
     @BeforeEach
     public void setUp() {
