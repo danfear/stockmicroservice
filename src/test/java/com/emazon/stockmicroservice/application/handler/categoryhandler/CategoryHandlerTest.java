@@ -2,7 +2,7 @@ package com.emazon.stockmicroservice.application.handler.categoryhandler;
 
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
-<<<<<<< HEAD
+
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
 import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
 import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
@@ -10,48 +10,33 @@ import com.emazon.stockmicroservice.application.mapper.ICategoryResponseMapper;
 import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.util.Pagination;
-=======
-import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
-import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
-import com.emazon.stockmicroservice.domain.model.Category;
->>>>>>> origin/feature/h2
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-<<<<<<< HEAD
+
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CategoryHandlerTest {
-
-    @InjectMocks
-    private CategoryHandler categoryHandler;
-    @Mock
-    private ICategoryRequestMapper categoryRequestMapper;
-    @Mock
-    private ICategoryServicePort categoryServicePort;
-    @Mock
-    private ICategoryResponseMapper categoryResponseMapper;
-=======
-import static org.mockito.Mockito.*;
-
 class SaveCategoryHandlerTest {
 
     @InjectMocks
-    private CategoryHandler saveCategoryHandler;
+    private CategoryHandler categoryHandler;
 
     @Mock
     private ICategoryRequestMapper categoryRequestMapper;
 
     @Mock
     private ICategoryServicePort categoryServicePort;
->>>>>>> origin/feature/h2
+
+    @Mock
+    private ICategoryResponseMapper categoryResponseMapper;
 
     @BeforeEach
     public void setUp() {
@@ -65,16 +50,14 @@ class SaveCategoryHandlerTest {
         categoryRequest.setName("Electronics");
         categoryRequest.setDescription("Devices");
 
-        Category category = new Category(50L,"Electronics", "Devices");
+        Category category = new Category(50L, "Electronics", "Devices");
 
         when(categoryRequestMapper.toCategory(categoryRequest)).thenReturn(category);
 
         // When
-<<<<<<< HEAD
+
         categoryHandler.saveCategoryInStock(categoryRequest);
-=======
-        saveCategoryHandler.saveCategoryInStock(categoryRequest);
->>>>>>> origin/feature/h2
+        categoryHandler.saveCategoryInStock(categoryRequest);
 
         // Then
         verify(categoryRequestMapper, times(1)).toCategory(categoryRequest);
@@ -88,18 +71,15 @@ class SaveCategoryHandlerTest {
         categoryRequest.setName("Electronics");
         categoryRequest.setDescription("Devices");
 
-        Category category = new Category(50L,"Electronics", "Devices");
+        Category category = new Category(50L, "Electronics", "Devices");
 
         when(categoryRequestMapper.toCategory(categoryRequest)).thenReturn(category);
         doThrow(new RuntimeException("Save failed")).when(categoryServicePort).saveCategory(category);
 
         // When & Then
         try {
-<<<<<<< HEAD
             categoryHandler.saveCategoryInStock(categoryRequest);
-=======
-            saveCategoryHandler.saveCategoryInStock(categoryRequest);
->>>>>>> origin/feature/h2
+            categoryHandler.saveCategoryInStock(categoryRequest);
         } catch (RuntimeException e) {
             // Expected exception
         }
@@ -107,7 +87,6 @@ class SaveCategoryHandlerTest {
         verify(categoryRequestMapper, times(1)).toCategory(categoryRequest);
         verify(categoryServicePort, times(1)).saveCategory(category);
     }
-<<<<<<< HEAD
 
     @Test
     void when_ParametersAreCorret_Expect_GetAllCategoriesFromStockSuccesfully() {
@@ -141,6 +120,4 @@ class SaveCategoryHandlerTest {
         assertEquals(2, result.getTotalElements());
         assertEquals(1, result.getTotalPages());
     }
-=======
->>>>>>> origin/feature/h2
 }

@@ -3,7 +3,7 @@ package com.emazon.stockmicroservice.domain.usecase.categoryusecase;
 import com.emazon.stockmicroservice.domain.exception.DescriptionOversizedException;
 import com.emazon.stockmicroservice.domain.exception.NameOversizedException;
 import com.emazon.stockmicroservice.domain.model.Category;
-import com.emazon.stockmicroservice.domain.spi.ISaveCategoryPersistencePort;
+import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.exception.NameEmptyException;
 import com.emazon.stockmicroservice.domain.exception.DescriptionEmptyException;
 
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.verify;
 class SaveCategoryUseCaseTest {
 
     @Mock
-    private ISaveCategoryPersistencePort categoryPersistencePort;
+    private ICategoryPersistencePort categoryPersistencePort;
     @InjectMocks
-    private SaveCategoryUseCase saveCategoryUseCase;
+    private CategoryUseCase saveCategoryUseCase;
 
     @Test
     void When_CategoryInformationIsCorrect_Expect_CategoryToBeSavedSuccessfully() {
