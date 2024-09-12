@@ -1,8 +1,8 @@
 package com.emazon.stockmicroservice.domain.util;
 
-public final class DomainConstants {
+public final class CategoryConstants {
 
-    public DomainConstants() {
+    public CategoryConstants() {
         throw new IllegalStateException("Utility class");
     }
 

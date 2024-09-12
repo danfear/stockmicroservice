@@ -1,11 +1,11 @@
-package com.emazon.stockmicroservice.domain.usecase.categoryusecase;
+package com.emazon.stockmicroservice.domain.usecase;
 
-import com.emazon.stockmicroservice.domain.exception.DescriptionOversizedException;
-import com.emazon.stockmicroservice.domain.exception.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionOversizedException;
+import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameOversizedException;
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
-import com.emazon.stockmicroservice.domain.exception.NameEmptyException;
-import com.emazon.stockmicroservice.domain.exception.DescriptionEmptyException;
+import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameEmptyException;
+import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionEmptyException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,19 +21,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class SaveCategoryUseCaseTest {
+class CategoryUseCaseTest {
 
     @Mock
     private ICategoryPersistencePort categoryPersistencePort;
     @InjectMocks
-    private CategoryUseCase saveCategoryUseCase;
+    private CategoryUseCase categoryUseCase;
 
     @Test
     void When_CategoryInformationIsCorrect_Expect_CategoryToBeSavedSuccessfully() {
         //Given
         Category category = new Category(50L,"Electronicos", "Productos electronicos");
         //When
-        this.saveCategoryUseCase.saveCategory(category);
+        this.categoryUseCase.saveCategory(category);
         //Then
         ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
         verify(this.categoryPersistencePort).saveCategory(categoryArgumentCaptor.capture());
@@ -48,7 +48,7 @@ class SaveCategoryUseCaseTest {
         Category category = new Category(50L,"", "Productos electronicos");
         //Then
         assertThrows(NameEmptyException.class, () -> {
-            saveCategoryUseCase.saveCategory(category);
+            categoryUseCase.saveCategory(category);
         });
     }
 
@@ -58,7 +58,7 @@ class SaveCategoryUseCaseTest {
         Category category = new Category(50L,"Electronicos", "");
         //Then
         assertThrows(DescriptionEmptyException.class, () -> {
-            saveCategoryUseCase.saveCategory(category);
+            categoryUseCase.saveCategory(category);
         });
     }
 
@@ -69,7 +69,7 @@ class SaveCategoryUseCaseTest {
                 "Productos electronicos");
         //Then
         assertThrows(NameOversizedException.class, () -> {
-            saveCategoryUseCase.saveCategory(category);
+            categoryUseCase.saveCategory(category);
         });
     }
 
@@ -80,7 +80,7 @@ class SaveCategoryUseCaseTest {
                 "Productos electronicossssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
         //Then
         assertThrows(DescriptionOversizedException.class, () -> {
-            saveCategoryUseCase.saveCategory(category);
+            categoryUseCase.saveCategory(category);
         });
     }
 

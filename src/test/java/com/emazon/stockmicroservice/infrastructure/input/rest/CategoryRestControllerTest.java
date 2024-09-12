@@ -3,7 +3,7 @@ package com.emazon.stockmicroservice.infrastructure.input.rest;
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
 import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
-import com.emazon.stockmicroservice.application.handler.categoryhandler.ICategoryHandler;
+import com.emazon.stockmicroservice.application.handler.ICategoryHandler;
 import com.emazon.stockmicroservice.domain.util.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CategoryRestControllerTest {
 
     private MockMvc mockMvc;
-
     @Mock
     private ICategoryHandler categoryHandler;
-
     @InjectMocks
     private CategoryRestController categoryRestController;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);

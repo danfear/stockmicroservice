@@ -1,8 +1,6 @@
-package com.emazon.stockmicroservice.application.handler.categoryhandler;
-
+package com.emazon.stockmicroservice.application.handler;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
-
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
 import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
 import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
@@ -17,27 +15,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.doThrow;
 
-class SaveCategoryHandlerTest {
-
+class CategoryHandlerTest {
     @InjectMocks
     private CategoryHandler categoryHandler;
-
     @Mock
     private ICategoryRequestMapper categoryRequestMapper;
-
     @Mock
     private ICategoryServicePort categoryServicePort;
-
     @Mock
     private ICategoryResponseMapper categoryResponseMapper;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -55,8 +51,6 @@ class SaveCategoryHandlerTest {
         when(categoryRequestMapper.toCategory(categoryRequest)).thenReturn(category);
 
         // When
-
-        categoryHandler.saveCategoryInStock(categoryRequest);
         categoryHandler.saveCategoryInStock(categoryRequest);
 
         // Then
@@ -116,7 +110,7 @@ class SaveCategoryHandlerTest {
         assertEquals(0, result.getPage());
         assertEquals(10, result.getSize());
         assertEquals("name", result.getSortBy());
-        assertEquals(true, result.isAscending());
+        assertTrue(result.isAscending());
         assertEquals(2, result.getTotalElements());
         assertEquals(1, result.getTotalPages());
     }

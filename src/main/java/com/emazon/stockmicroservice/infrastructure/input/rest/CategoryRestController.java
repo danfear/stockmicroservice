@@ -3,7 +3,7 @@ package com.emazon.stockmicroservice.infrastructure.input.rest;
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
 import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
-import com.emazon.stockmicroservice.application.handler.categoryhandler.ICategoryHandler;
+import com.emazon.stockmicroservice.application.handler.ICategoryHandler;
 import com.emazon.stockmicroservice.domain.util.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

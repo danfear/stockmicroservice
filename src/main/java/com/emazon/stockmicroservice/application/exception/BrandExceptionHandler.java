@@ -1,9 +1,9 @@
 package com.emazon.stockmicroservice.application.exception;
 
-import com.emazon.stockmicroservice.domain.exception.DescriptionEmptyException;
-import com.emazon.stockmicroservice.domain.exception.DescriptionOversizedException;
-import com.emazon.stockmicroservice.domain.exception.NameEmptyException;
-import com.emazon.stockmicroservice.domain.exception.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameEmptyException;
+import com.emazon.stockmicroservice.domain.exception.brandexceptions.DescriptionEmptyException;
+import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.brandexceptions.DescriptionOversizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class BrandExceptionHandler {
+
     static final String VALIDATION_ERROR = "Validation Error";
 
     @ExceptionHandler(NameEmptyException.class)
@@ -53,5 +54,4 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
 }
