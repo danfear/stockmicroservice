@@ -30,7 +30,6 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
         categoryRepository.save(categoryEntityMapper.toEntity(category));
     }
 
-
     @Override
     public List<Category> getAllCategories(Pagination pagination) {
         Pageable pageable = PageRequest.of(
@@ -39,7 +38,6 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
                 pagination.isAscending() ? Sort.by(pagination.getSortBy()).ascending()
                         : Sort.by(pagination.getSortBy()).descending()
         );
-
         Page<CategoryEntity> categoryPage = categoryRepository.findAll(pageable);
         if (categoryPage.isEmpty()) {
             throw new NoDataFoundException();

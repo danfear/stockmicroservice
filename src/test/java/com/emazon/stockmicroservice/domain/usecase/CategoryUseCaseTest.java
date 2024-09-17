@@ -7,6 +7,7 @@ import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameEmptyException;
 import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionEmptyException;
 
+import com.emazon.stockmicroservice.domain.util.Pagination;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,9 +17,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryUseCaseTest {
@@ -29,7 +34,7 @@ class CategoryUseCaseTest {
     private CategoryUseCase categoryUseCase;
 
     @Test
-    void When_CategoryInformationIsCorrect_Expect_CategoryToBeSavedSuccessfully() {
+    void when_CategoryInformationIsCorrect_Expect_CategoryToBeSavedSuccessfully() {
         //Given
         Category category = new Category(50L,"Electronicos", "Productos electronicos");
         //When
@@ -43,7 +48,7 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void When_CategoryNameIsEmpty_Expect_NameEmptyException() {
+    void when_CategoryNameIsEmpty_Expect_NameEmptyException() {
         //Given
         Category category = new Category(50L,"", "Productos electronicos");
         //Then
@@ -53,7 +58,7 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void When_CategoryDescriptionIsEmpty_Expect_DescriptionEmptyException() {
+    void when_CategoryDescriptionIsEmpty_Expect_DescriptionEmptyException() {
         //Given
         Category category = new Category(50L,"Electronicos", "");
         //Then
@@ -63,7 +68,7 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void When_CategoryNameIsOverMaxLength_Expect_NameOversizedException() {
+    void when_CategoryNameIsOverMaxLength_Expect_NameOversizedException() {
         //Given
         Category category = new Category(50L,"Electronicossssssssssssssssssssssssssssssssssssssss",
                 "Productos electronicos");
@@ -74,7 +79,7 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void When_CategoryDescriptionIsOverMaxLength_Expect_DescriptionOversizedException() {
+    void when_CategoryDescriptionIsOverMaxLength_Expect_DescriptionOversizedException() {
         //Given
         Category category = new Category(50L,"Electronicos",
                 "Productos electronicossssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
@@ -82,6 +87,34 @@ class CategoryUseCaseTest {
         assertThrows(DescriptionOversizedException.class, () -> {
             categoryUseCase.saveCategory(category);
         });
+    }
+
+    @Test
+    void whenCategoriesListIsProvided_Expects_getAllCategoriesReturnsExpectedList() {
+        // Given
+        Pagination pagination = new Pagination(1, 10, "name", true);
+        Category category1 = new Category(1L, "Category 1", "Description 1");
+        Category category2 = new Category(2L, "Category 2", "Description 2");
+        List<Category> expectedCategories = Arrays.asList(category1, category2);
+        // When
+        when(categoryPersistencePort.getAllCategories(pagination)).thenReturn(expectedCategories);
+
+        List<Category> actualCategories = categoryUseCase.getAllCategories(pagination);
+
+        // Assert
+        assertEquals(expectedCategories, actualCategories);
+    }
+
+    @Test
+    void When_TotalElementsNumberIsProvided_Expect_getTotalElementsReturnsExpectedNumber() {
+        // Given: Expected Value
+        long expectedTotalElements = 100;
+        // Mock behavior
+        when(categoryPersistencePort.getTotalElements()).thenReturn(expectedTotalElements);
+        // Then
+        long actualTotalElements = categoryUseCase.getTotalElements();
+        // Assert
+        assertEquals(expectedTotalElements, actualTotalElements);
     }
 
 

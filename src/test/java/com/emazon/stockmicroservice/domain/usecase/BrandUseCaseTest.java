@@ -6,6 +6,7 @@ import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameEmptyEx
 import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameOversizedException;
 import com.emazon.stockmicroservice.domain.model.Brand;
 import com.emazon.stockmicroservice.domain.spi.IBrandPersistencePort;
+import com.emazon.stockmicroservice.domain.util.Pagination;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BrandUseCaseTest {
@@ -79,6 +84,34 @@ class BrandUseCaseTest {
         assertThrows(DescriptionOversizedException.class, () -> {
             brandUseCase.saveBrand(brand);
         });
+    }
+
+    @Test
+    void whenBrandsListIsProvided_Expects_getAllBrandsToReturnExpectedList() {
+        // Given
+        Pagination pagination = new Pagination(1, 10, "name", true);
+        Brand brand1 = new Brand(1L, "Brand 1", "Description 1");
+        Brand brand2 = new Brand(2L, "Brand 2", "Description 2");
+        List<Brand> expectedBrands = Arrays.asList(brand1, brand2);
+        // When
+        when(brandPersistencePort.getAllBrands(pagination)).thenReturn(expectedBrands);
+
+        List<Brand> actualBrands = brandUseCase.getAllBrands(pagination);
+
+        // Assert
+        assertEquals(expectedBrands, actualBrands);
+    }
+
+    @Test
+    void When_TotalElementsNumberIsProvided_Expect_getTotalElementsToReturnExpectedNumber() {
+        // Given: Expected Value
+        long expectedTotalElements = 100;
+        // Mock behavior
+        when(brandPersistencePort.getTotalElements()).thenReturn(expectedTotalElements);
+        // Then
+        long actualTotalElements = brandUseCase.getTotalElements();
+        // Assert
+        assertEquals(expectedTotalElements, actualTotalElements);
     }
 
 }

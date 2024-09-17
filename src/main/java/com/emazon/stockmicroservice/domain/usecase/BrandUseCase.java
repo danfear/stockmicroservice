@@ -8,6 +8,9 @@ import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameOversiz
 import com.emazon.stockmicroservice.domain.model.Brand;
 import com.emazon.stockmicroservice.domain.spi.IBrandPersistencePort;
 import com.emazon.stockmicroservice.domain.util.BrandConstants;
+import com.emazon.stockmicroservice.domain.util.Pagination;
+
+import java.util.List;
 
 public class BrandUseCase implements IBrandServicePort {
 
@@ -32,5 +35,14 @@ public class BrandUseCase implements IBrandServicePort {
             throw new DescriptionOversizedException();
         }
         brandPersistencePort.saveBrand(brand);
+    }
+
+    @Override
+    public List<Brand> getAllBrands(Pagination pagination) {
+        return brandPersistencePort.getAllBrands(pagination);
+    }
+    @Override
+    public long getTotalElements() {
+        return brandPersistencePort.getTotalElements();
     }
 }

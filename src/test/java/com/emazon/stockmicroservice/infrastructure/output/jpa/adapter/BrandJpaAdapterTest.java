@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,5 +53,16 @@ class BrandJpaAdapterTest {
         assertThrows(BrandAlreadyExistsException.class, () -> {
             brandJpaAdapter.saveBrand(brand);
         });
+    }
+
+    @Test
+    void when_ExpectedCountIsProvided_Expect_GetTotalElementsAssertsExpected() {
+        long expectedTotal = 5L;
+
+        when(brandRepository.count()).thenReturn(expectedTotal);
+
+        long result = brandJpaAdapter.getTotalElements();
+
+        assertEquals(expectedTotal, result);
     }
 }

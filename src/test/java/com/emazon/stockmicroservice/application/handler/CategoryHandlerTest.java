@@ -83,7 +83,7 @@ class CategoryHandlerTest {
     }
 
     @Test
-    void when_ParametersAreCorret_Expect_GetAllCategoriesFromStockSuccesfully() {
+    void when_ParametersAreCorrect_Expect_GetAllCategoriesFromStockSuccessfully() {
         Pagination pagination = new Pagination(0, 10, "name", true);
         Category category1 = new Category(1L, "Electronics", "Devices and gadgets");
         Category category2 = new Category(2L, "Books", "Various books");
