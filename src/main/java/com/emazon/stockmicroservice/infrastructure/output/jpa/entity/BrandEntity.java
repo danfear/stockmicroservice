@@ -6,10 +6,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Table(name = "brand")
@@ -25,4 +27,7 @@ public class BrandEntity {
     private String name;
     @Column(length = 120)
     private String description;
+
+    @OneToMany(mappedBy = "brand")
+    private List<ItemEntity> items;
 }

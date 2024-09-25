@@ -4,6 +4,7 @@ import com.emazon.stockmicroservice.domain.exception.brandexceptions.Description
 import com.emazon.stockmicroservice.domain.exception.brandexceptions.DescriptionOversizedException;
 import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameEmptyException;
 import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.brandexceptions.BrandAlreadyExistsException;
 import com.emazon.stockmicroservice.domain.model.Brand;
 import com.emazon.stockmicroservice.domain.spi.IBrandPersistencePort;
 import com.emazon.stockmicroservice.domain.util.Pagination;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -44,6 +46,19 @@ class BrandUseCaseTest {
         assertEquals("Productos electronicos",brandArgumentCaptor.getValue().getDescription());
     }
 
+    @Test
+    void when_BrandNameExists_Expect_ThrowBrandAlreadyExistsException() {
+        // Given
+        Brand brand = new Brand(10L,"Electrolux", "Kitchen Devices");
+        // When
+        when(brandPersistencePort.existsByName(brand.getName())).thenReturn(true);
+        // Then
+        assertThrows(BrandAlreadyExistsException.class, () -> {
+            brandUseCase.saveBrand(brand);
+        });
+        // Verify that the persistence port was called
+        Mockito.verify(brandPersistencePort).existsByName(brand.getName());
+    }
     @Test
     void When_BrandNameIsEmpty_Expect_NameEmptyException() {
         //Given

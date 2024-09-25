@@ -1,4 +1,4 @@
-package com.emazon.stockmicroservice.infrastructure.exception;
+package com.emazon.stockmicroservice.domain.exception.brandexceptions;
 
 public class BrandAlreadyExistsException extends RuntimeException{
     public BrandAlreadyExistsException(){

@@ -2,9 +2,12 @@ package com.emazon.stockmicroservice.infrastructure.input.rest;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
-import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.PaginatedResponse;
 import com.emazon.stockmicroservice.application.handler.ICategoryHandler;
 import com.emazon.stockmicroservice.domain.util.Pagination;
+import com.emazon.stockmicroservice.infrastructure.exception.InvalidPageException;
+import com.emazon.stockmicroservice.infrastructure.exception.InvalidSizeException;
+import com.emazon.stockmicroservice.infrastructure.util.RestControllerConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +34,16 @@ public class CategoryRestController {
 
     @GetMapping()
     public ResponseEntity<PaginatedResponse<CategoryResponse>> getAllCategoriesFromStock(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "true") boolean ascending) {
+            @RequestParam(defaultValue = RestControllerConstants.PAGE_DEFAULT_VALUE) int page,
+            @RequestParam(defaultValue = RestControllerConstants.SIZE_DEFAULT_VALUE) int size,
+            @RequestParam(defaultValue = RestControllerConstants.SORT_BY_DEFAULT_VALUE) String sortBy,
+            @RequestParam(defaultValue = RestControllerConstants.ASCENDING_DEFAULT_VALUE) boolean ascending) {
+        if (page < 0) {
+            throw new InvalidPageException("Page number cannot be negative");
+        }
+        if (size <= 0) {
+            throw new InvalidSizeException("Size must be greater than zero");
+        }
 
         Pagination pagination = new Pagination(page, size, sortBy, ascending);
         PaginatedResponse<CategoryResponse> paginatedResponse = categoryHandler.getAllCategoriesFromStock(pagination);

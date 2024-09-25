@@ -3,7 +3,6 @@ package com.emazon.stockmicroservice.infrastructure.output.jpa.adapter;
 import com.emazon.stockmicroservice.domain.model.Brand;
 import com.emazon.stockmicroservice.domain.spi.IBrandPersistencePort;
 import com.emazon.stockmicroservice.domain.util.Pagination;
-import com.emazon.stockmicroservice.infrastructure.exception.BrandAlreadyExistsException;
 import com.emazon.stockmicroservice.infrastructure.exception.NoDataFoundException;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.entity.BrandEntity;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.mapper.IBrandEntityMapper;
@@ -24,10 +23,12 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
 
     @Override
     public void saveBrand(Brand brand) {
-        if (brandRepository.findByName(brand.getName()).isPresent()){
-            throw new BrandAlreadyExistsException();
-        }
         brandRepository.save(brandEntityMapper.toEntity(brand));
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return brandRepository.findByName(name).isPresent();
     }
 
     @Override

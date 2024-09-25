@@ -2,9 +2,9 @@ package com.emazon.stockmicroservice.infrastructure.output.jpa.adapter;
 
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.util.Pagination;
-import com.emazon.stockmicroservice.infrastructure.exception.CategoryAlreadyExistsException;
 import com.emazon.stockmicroservice.infrastructure.exception.NoDataFoundException;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.entity.CategoryEntity;
+import com.emazon.stockmicroservice.infrastructure.output.jpa.entity.ItemEntity;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.mapper.ICategoryEntityMapper;
 import com.emazon.stockmicroservice.infrastructure.output.jpa.repository.ICategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -18,12 +18,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,35 +35,9 @@ class CategoryJpaAdapterTest {
     @InjectMocks
     private CategoryJpaAdapter categoryJpaAdapter;
 
-    @Test
-    void When_CategoryDoesNotExist_Expect_CategoryEntityToBeSaved() {
-        // Given
-        Category category = new Category(50L, "Electronicos", "Productos electronicos");
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setName("Electronicos");
-        when(categoryRepository.findByName("Electronicos")).thenReturn(Optional.empty());
-        when(categoryEntityMapper.toEntity(category)).thenReturn(categoryEntity);
-        // When
-        categoryJpaAdapter.saveCategory(category);
-        // Then
-        verify(categoryRepository).save(categoryEntity);
-    }
 
     @Test
-    void When_CategoryExists_Expect_ThrowsCategoryAlreadyExistsException() {
-        // Given
-        Category category = new Category(4L, "herramientas", "a");
-
-        when(categoryRepository.findByName("herramientas")).thenReturn(Optional.of(new CategoryEntity()));
-
-        // Assert
-        assertThrows(CategoryAlreadyExistsException.class, () -> {
-            categoryJpaAdapter.saveCategory(category);
-        });
-    }
-
-    @Test
-    void when_DataBaseHasCategorires_Expect_testGetAllCategoriesSuccessfully() {
+    void when_DataBaseHasCategories_Expect_GetAllCategoriesSuccessfully() {
         Pagination pagination = new Pagination(0, 10, "name", true);
         Pageable pageable = PageRequest.of(
                 pagination.getPage(),
@@ -72,8 +45,10 @@ class CategoryJpaAdapterTest {
                 Sort.by(pagination.getSortBy()).ascending()
         );
 
-        CategoryEntity categoryEntity1 = new CategoryEntity(1L, "Electronicos", "Productos electronicos");
-        CategoryEntity categoryEntity2 = new CategoryEntity(2L, "Libros", "VLibros variados");
+        List<ItemEntity> emptyItemList = new ArrayList<>(); // Lista vacía de items
+
+        CategoryEntity categoryEntity1 = new CategoryEntity(1L, "Electronicos", "Productos electronicos", emptyItemList);
+        CategoryEntity categoryEntity2 = new CategoryEntity(2L, "Libros", "VLibros variados", emptyItemList);
         List<CategoryEntity> categoryEntities = List.of(categoryEntity1, categoryEntity2);
 
         Category category1 = new Category(1L, "Electronicos", "Productos electronicos");

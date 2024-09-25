@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface IBrandPersistencePort{
     void saveBrand(Brand brand);
+    boolean existsByName(String name);
     List<Brand> getAllBrands(Pagination pagination);
     long getTotalElements();
 }

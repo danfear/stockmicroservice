@@ -1,10 +1,7 @@
 package com.emazon.stockmicroservice.domain.usecase;
 
 import com.emazon.stockmicroservice.domain.api.IBrandServicePort;
-import com.emazon.stockmicroservice.domain.exception.brandexceptions.DescriptionEmptyException;
-import com.emazon.stockmicroservice.domain.exception.brandexceptions.DescriptionOversizedException;
-import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameEmptyException;
-import com.emazon.stockmicroservice.domain.exception.brandexceptions.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.brandexceptions.*;
 import com.emazon.stockmicroservice.domain.model.Brand;
 import com.emazon.stockmicroservice.domain.spi.IBrandPersistencePort;
 import com.emazon.stockmicroservice.domain.util.BrandConstants;
@@ -22,8 +19,15 @@ public class BrandUseCase implements IBrandServicePort {
 
     @Override
     public void saveBrand(Brand brand) {
+        validateBrand(brand);
+        brandPersistencePort.saveBrand(brand);
+    }
+    private void validateBrand(Brand brand){
         if (brand.getName() == null || brand.getName().trim().isEmpty()) {
             throw new NameEmptyException();
+        }
+        if (brandPersistencePort.existsByName(brand.getName())) {
+            throw new BrandAlreadyExistsException();
         }
         if (brand.getDescription() == null || brand.getDescription().trim().isEmpty()) {
             throw new DescriptionEmptyException();
@@ -34,7 +38,6 @@ public class BrandUseCase implements IBrandServicePort {
         if (brand.getDescription().length() > BrandConstants.MAX_DESCRIPTION_LENGTH) {
             throw new DescriptionOversizedException();
         }
-        brandPersistencePort.saveBrand(brand);
     }
 
     @Override

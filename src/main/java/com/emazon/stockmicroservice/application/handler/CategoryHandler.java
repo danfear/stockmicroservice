@@ -3,7 +3,7 @@ package com.emazon.stockmicroservice.application.handler;
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
-import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.PaginatedResponse;
 import com.emazon.stockmicroservice.application.mapper.ICategoryRequestMapper;
 import com.emazon.stockmicroservice.application.mapper.ICategoryResponseMapper;
 import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;

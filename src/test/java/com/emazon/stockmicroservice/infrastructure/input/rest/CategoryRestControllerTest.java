@@ -2,7 +2,7 @@ package com.emazon.stockmicroservice.infrastructure.input.rest;
 
 import com.emazon.stockmicroservice.application.dto.CategoryRequest;
 import com.emazon.stockmicroservice.application.dto.CategoryResponse;
-import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.PaginatedResponse;
 import com.emazon.stockmicroservice.application.handler.ICategoryHandler;
 import com.emazon.stockmicroservice.domain.util.Pagination;
 import org.junit.jupiter.api.BeforeEach;

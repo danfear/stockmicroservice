@@ -2,7 +2,7 @@ package com.emazon.stockmicroservice.infrastructure.input.rest;
 
 import com.emazon.stockmicroservice.application.dto.BrandRequest;
 import com.emazon.stockmicroservice.application.dto.BrandResponse;
-import com.emazon.stockmicroservice.application.dto.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.PaginatedResponse;
 import com.emazon.stockmicroservice.application.handler.IBrandHandler;
 
 import com.emazon.stockmicroservice.domain.util.Pagination;

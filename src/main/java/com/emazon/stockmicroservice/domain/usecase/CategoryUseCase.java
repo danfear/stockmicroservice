@@ -1,10 +1,7 @@
 package com.emazon.stockmicroservice.domain.usecase;
 
 import com.emazon.stockmicroservice.domain.api.ICategoryServicePort;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionEmptyException;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionOversizedException;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameEmptyException;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.categoryexceptions.*;
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.util.CategoryConstants;
@@ -22,8 +19,15 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public void saveCategory(Category category) {
+        validateCategory(category);
+        categoryPersistencePort.saveCategory(category);
+    }
+    private void validateCategory(Category category){
         if (category.getName() == null || category.getName().trim().isEmpty()) {
             throw new NameEmptyException();
+        }
+        if (categoryPersistencePort.existsByName(category.getName())) {
+            throw new CategoryAlreadyExistsException();
         }
         if (category.getDescription() == null || category.getDescription().trim().isEmpty()) {
             throw new DescriptionEmptyException();
@@ -34,8 +38,6 @@ public class CategoryUseCase implements ICategoryServicePort {
         if (category.getDescription().length() > CategoryConstants.MAX_DESCRIPTION_LENGTH) {
             throw new DescriptionOversizedException();
         }
-        
-        categoryPersistencePort.saveCategory(category);
     }
 
     @Override

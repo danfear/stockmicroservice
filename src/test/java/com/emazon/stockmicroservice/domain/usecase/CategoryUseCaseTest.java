@@ -1,11 +1,8 @@
 package com.emazon.stockmicroservice.domain.usecase;
 
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionOversizedException;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameOversizedException;
+import com.emazon.stockmicroservice.domain.exception.categoryexceptions.*;
 import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.NameEmptyException;
-import com.emazon.stockmicroservice.domain.exception.categoryexceptions.DescriptionEmptyException;
 
 import com.emazon.stockmicroservice.domain.util.Pagination;
 import org.junit.jupiter.api.Test;
@@ -14,8 +11,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +52,20 @@ class CategoryUseCaseTest {
         assertThrows(NameEmptyException.class, () -> {
             categoryUseCase.saveCategory(category);
         });
+    }
+
+    @Test
+    void when_CategoryNameExists_Expect_ThrowCategoryAlreadyExistsException() {
+        // Given
+        Category category = new Category(10L,"Electronics", "Devices and gadgets");
+        // When
+        when(categoryPersistencePort.existsByName(category.getName())).thenReturn(true);
+        // Then
+        assertThrows(CategoryAlreadyExistsException.class, () -> {
+            categoryUseCase.saveCategory(category);
+        });
+        // Verify that the persistence port was called
+        Mockito.verify(categoryPersistencePort).existsByName(category.getName());
     }
 
     @Test
@@ -116,6 +127,4 @@ class CategoryUseCaseTest {
         // Assert
         assertEquals(expectedTotalElements, actualTotalElements);
     }
-
-
 }
