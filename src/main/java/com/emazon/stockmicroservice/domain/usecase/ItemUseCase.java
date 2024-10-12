@@ -8,6 +8,9 @@ import com.emazon.stockmicroservice.domain.model.Item;
 import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.spi.ItemPersistencePort;
 import com.emazon.stockmicroservice.domain.util.ItemConstants;
+import com.emazon.stockmicroservice.domain.util.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.Pagination;
+
 
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +58,11 @@ public class ItemUseCase implements ItemServicePort {
         if (existingCategoryIds.size() != categoryIds.size()) {
             throw new ItemCategoryNotFoundException();
         }
+    }
+
+    @Override
+    public PaginatedResponse<Item> getAllItems(Pagination paginationRequest) {
+        return itemPersistencePort.getAllItems(paginationRequest);
     }
 
 }

@@ -6,6 +6,8 @@ import com.emazon.stockmicroservice.domain.model.Category;
 import com.emazon.stockmicroservice.domain.model.Item;
 import com.emazon.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import com.emazon.stockmicroservice.domain.spi.ItemPersistencePort;
+import com.emazon.stockmicroservice.domain.util.PaginatedResponse;
+import com.emazon.stockmicroservice.domain.util.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -96,7 +99,7 @@ class ItemUseCaseTest {
         when(item.getCategories()).thenReturn(Collections.singletonList(category));
 
         when(categoryPersistencePort.findExistingCategoriesByIds(anyList()))
-                .thenReturn(Collections.emptyList()); // No encuentra categorías en DB
+                .thenReturn(Collections.emptyList()); // Not found in DB
         // When & Then
         assertThrows(ItemCategoryNotFoundException.class, () -> itemUseCase.saveItem(item));
     }
@@ -119,4 +122,39 @@ class ItemUseCaseTest {
         verify(itemPersistencePort).saveItem(item);
     }
 
+    @Test
+    void shouldReturnPaginatedResponseWhenGettingAllItems() {
+        Pagination paginationRequest = new Pagination(0, 10, "name", true);
+        PaginatedResponse<Item> expectedResponse = new PaginatedResponse<>(
+                List.of(createValidItem()),
+                0,
+                10,
+                "name",
+                true,
+                1,
+                1
+        );
+
+        when(itemPersistencePort.getAllItems(paginationRequest)).thenReturn(expectedResponse);
+
+        PaginatedResponse<Item> response = itemUseCase.getAllItems(paginationRequest);
+
+        assertEquals(expectedResponse, response);
+    }
+
+    //aux
+    private Item createValidItem() {
+        return new Item(1L, "ItemName", "Description", 10, 100.0, createValidBrand(), createValidCategories());
+    }
+
+    private Brand createValidBrand() {
+        return new Brand(1L, "BrandName", "BrandDescription");
+    }
+
+    private List<Category> createValidCategories() {
+        return List.of(
+                new Category(1L, "Electronics", "CategoryDescription"),
+                new Category(2L, "Books", "CategoryDescription")
+        );
+    }
 }
